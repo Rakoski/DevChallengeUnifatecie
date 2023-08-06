@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portal do Nether</title>
+    <link rel="stylesheet" href="resources/css/bootstrap.min.css">
+	<script src="resources/js/jquery.min.js"></script>
+	<script src="resources/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="resources/css/style.css">
+  <script src="resources/js/main.js"></script>
+
+</head>
+<body onload="javascript:ListarCursos();">
+    <nav class="custom-navbar" style="border-bottom: 2px #6b09e4 solid;">
+        <div class="container-fluid ">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="home.html" class="navbar-brand textBig"><img src="./resources/img/portal-logo.png" width="250px"></a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse" style="background-color: #f7f7f7;">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#cursos" class="course-btn" id="fodase" style="background-color: #6b09e4; color: #fff; border-radius: 5px;"><i class="glyphicon glyphicon-refresh"></i></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="padding: 7px; margin-left: 10px;"  id="setUserName"> 
+                        
+                        </a>
+                        <ul class="dropdown-menu">    
+                        <li><a href="#">Meu Perfil</a></li>
+                        <li><a href="#">Dados Cadastrais</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Alterar Senha</a></li>
+                        </ul>
+                    </li>
+                    <li><a onclick="logout()">Sair <i class="glyphicon glyphicon-log-out"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="row" style="margin-top: 20px; text-align: center;">
+        <h2>Secretaria Acadêmica</h2>
+        <hr style="width: 50%;">
+        <ul class="grade">     
+            <li> 
+                <a href="solicitar-protocolo.html" style="display: block;">
+                    <img src="./resources/img/solicitar-protocolos.png" alt="" style="height: 100px; margin-bottom: 10px;">
+                    <p>Solicitar um Requerimento</p>
+                </a> 
+            </li>
+            <li>
+                <a href="meus-requerimentos.html" style="display: block;">
+                    <img src="./resources/img/meus-requerimentos.png" alt="" style="height: 100px; margin-bottom: 10px;">
+                    <span>Meus Requerimentos e Protocolos</span>
+                </a> 
+            </li>
+            <li> 
+                <a href="secretaria.html" style="display: block;">
+                    <img src="./resources/img/back.png" alt="" style="height: 100px; margin-bottom: 10px;">
+                    <p>Voltar</p>
+                </a> 
+            </li>
+        </ul>
+    </div>
+
+    <div id="cursos" class="overlay">
+        <div class="popup">
+            <h2>Selecione o curso</h2>
+            <a class="close" href="#">&times;</a>
+            <div class="content">
+                <div class="table-responsive">
+                    <table id="ListaCadastro" class="table">
+                        <thead>
+                            <tr>
+                                <th>Nome do Curso</th>
+                                <th class="hidden-sm">Duração</th>
+                                <th>Situação Escolar</th>
+                                <th style="width: 50px;">Selecionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+      </div>
+    <script>
+      validaUser();
+      
+    </script>
+</body>
+</html>
