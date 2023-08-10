@@ -6,7 +6,7 @@ function login() {
 
   $.ajax({
     type: "POST",
-    url: "http://localhost:8080/api/auth/login",
+    url: "http://localhost:8080/api/aluno/login",
     data: JSON.stringify(emailpassword),
     contentType: "application/json; charset=utf-8",
     dataType: "text",
