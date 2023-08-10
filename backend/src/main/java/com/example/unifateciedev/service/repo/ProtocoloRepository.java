@@ -12,7 +12,7 @@ public interface ProtocoloRepository extends JpaRepository<Protocolo, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO protocolo(protocolo_nome, protocolo_descricao, status_curso_protocolo, protocolo_docname, protocolo_doctype) " +
+    @Query(value = "INSERT INTO usuarios.protocolo(protocolo_nome, protocolo_descricao, status_curso_protocolo, protocolo_docname, protocolo_doctype) " +
             "VALUES (?1, ?2, ?3, ?4, ?5)", nativeQuery = true)
     Integer inserirProtocolo(String protocoloNome, String protocoloDescricao, String statusCursoProtocolo,
                              String protocoloDocName, String protocoloDocType);

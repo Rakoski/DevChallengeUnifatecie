@@ -18,14 +18,14 @@ public interface DisciplinasRepository extends JpaRepository<Disciplina, Long> {
 
     List<Disciplina> findByProfessor(String professor);
 
-    @Query(value = "SELECT d.id_disciplinas, d.nome_disciplina AS disciplina_nome, d.professor " +
-            "FROM disciplinas d " +
-            "JOIN cursos_disciplinas cd ON d.id_disciplinas = cd.disciplinas_id " +
-            "JOIN cursos c ON cd.curso_id = c.id_curso " +
+    @Query(value = "SELECT d.id_disciplina, d.nome_disciplina AS disciplina_nome, d.professor_disciplina " +
+            "FROM usuarios.disciplina d " +
+            "JOIN usuarios.curso_disciplina cd ON d.id_disciplina = cd.disciplina_id " +
+            "JOIN usuarios.curso c ON cd.curso_id = c.id_curso " +
             "WHERE c.id_curso = :id_curso", nativeQuery = true)
     List<Object[]> findDisciplinasByCursoId(@Param("id_curso") Long idCurso);
 
-    @Query(value = "SELECT nota, status_disciplina FROM usuario_disciplina " +
+    @Query(value = "SELECT nota, status_disciplina FROM usuarios.usuario_disciplina " +
             "WHERE usuario_id = ?1 AND disciplina_id = ?2", nativeQuery = true)
     List<Object[]> findNotaStatusByUserAndDisciplinaId(@Param("usuario_id") Long usuario_id, @Param("disciplina_id") Long disciplina_id);
 

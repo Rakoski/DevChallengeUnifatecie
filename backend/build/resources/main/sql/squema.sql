@@ -2,50 +2,53 @@ create database usuarios;
 
 use usuarios;
 
-create table usuario(
-    id_usuario BIGINT not null primary key auto_increment,
-    email varchar(255) not null unique,
-    nome varchar(255),
-    sobrenome varchar(255),
-    password_hash varchar(255) not null,
-    password_salt varchar(255) not null,
-    password varchar(255) NULL
-);
+CREATE TABLE usuario (
+       id_usuario BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+       usuario_email VARCHAR(255) NOT NULL UNIQUE,
+       usuario_nome VARCHAR(255),
+       usuario_sobrenome VARCHAR(255),
+       password_hash BLOB NOT NULL,
+       password_salt BLOB NOT NULL
+) CHARACTER SET utf8mb4;
 
-create table cursos(
+
+create table curso(
        id_curso BIGINT not null primary key auto_increment,
-       nome varchar(100) not null,
-       duracao_periodo int not null
+       curso_nome varchar(100) not null,
+       duracao_periodo_curso int not null
 );
 
-create table cursos_usuario(
+create table curso_usuario(
+       curso_usuario_id BIGINT not null primary key auto_increment,
        usuario_id BIGINT not null,
        curso_id BIGINT not null,
-       nome_status varchar(45) not null,
+       nome_status_curso_usuario varchar(45) not null,
        foreign key (usuario_id) references usuario(id_usuario),
-       foreign key (curso_id) references cursos(id_curso)
+       foreign key (curso_id) references curso(id_curso)
 );
 
-create table disciplinas(
-        id_disciplinas BIGINT not null primary key auto_increment,
+create table disciplina(
+        id_disciplina BIGINT not null primary key auto_increment,
         nome_disciplina varchar(255) not null,
-        professor varchar(255) not null
+        professor_disciplina varchar(255) not null
 );
 
-create table cursos_disciplinas(
+create table curso_disciplina(
+       id_curso_disciplina BIGINT not null primary key auto_increment,
        curso_id BIGINT not null,
-       disciplinas_id BIGINT not null,
-       foreign key (curso_id) references cursos(id_curso),
-       foreign key (disciplinas_id) references disciplinas(id_disciplinas)
+       disciplina_id BIGINT not null,
+       foreign key (curso_id) references curso(id_curso),
+       foreign key (disciplina_id) references disciplina(id_disciplina)
 );
 
 create table usuario_disciplina(
+       id_usuario_disciplina BIGINT not null primary key auto_increment,
        usuario_id BIGINT not null,
        disciplina_id BIGINT not null,
        nota int,
        status_disciplina varchar(45) not null,
        foreign key (usuario_id) references usuario(id_usuario),
-       foreign key (disciplina_id) references disciplinas(id_disciplinas)
+       foreign key (disciplina_id) references disciplina(id_disciplina)
 );
 
 create table protocolo(
@@ -71,7 +74,7 @@ CREATE TABLE protocolo_usuario (
 );
 
 
-INSERT INTO cursos
+INSERT INTO curso
 VALUES (1, 'Análise e desenvolvimento de sistemas', 3),
        (2, 'Ciência da computação', 4),
        (3, 'Educação Física', 3),
