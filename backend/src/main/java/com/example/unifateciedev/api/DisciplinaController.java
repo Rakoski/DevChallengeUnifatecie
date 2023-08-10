@@ -1,19 +1,18 @@
 package com.example.unifateciedev.api;
 
+import com.example.unifateciedev.model.Dtos.DisciplinaRegistroCursoDto;
 import com.example.unifateciedev.model.entidades.Curso;
 import com.example.unifateciedev.model.entidades.Disciplina;
+import com.example.unifateciedev.service.ServicoCurso;
 import com.example.unifateciedev.service.repo.CursoRepository;
 import com.example.unifateciedev.service.repo.DisciplinasRepository;
-import com.example.unifateciedev.service.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.Access;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -28,6 +27,24 @@ public class DisciplinaController {
     protected CursoRepository cursoRepository;
 
     protected DisciplinasRepository disciplinasRepository;
+
+    @Autowired
+    private ServicoCurso servicoCurso;
+
+    @PostMapping("/cursos/registrar")
+    public ResponseEntity<String> colocarCursoComDisciplina(@RequestBody DisciplinaRegistroCursoDto disciplinaRegistroCursoDto) {
+        try {
+            servicoCurso.registrarCursoComDisciplina(
+                    disciplinaRegistroCursoDto.getCursoId(),
+                    disciplinaRegistroCursoDto.getDisciplinaId()
+            );
+
+            return ResponseEntity.ok("Disciplina registered with curso successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error registering disciplina with curso: " + e.getMessage());
+        }
+    }
 
     @GetMapping("/{id_disciplina}")
     public ResponseEntity<List<Curso>> encontreCursosPeloIdDaDisciplina(@PathVariable("id_disciplina") Long idDisciplina) {

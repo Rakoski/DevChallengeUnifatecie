@@ -19,6 +19,15 @@ public class CursoDisciplina {
     @JoinColumn(name = "disciplina_id")
     private Disciplina disciplina;
 
+    public CursoDisciplina(Curso curso, Disciplina disciplina) {
+        this.curso = curso;
+        this.disciplina = disciplina;
+    }
+
+    public CursoDisciplina() {
+
+    }
+
     public Long getCursoDisciplinaId() {
         return CursoDisciplinaId;
     }

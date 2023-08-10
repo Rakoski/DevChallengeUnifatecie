@@ -1,0 +1,6 @@
+localhost:8080/api/disciplina/cursos/registrar
+
+{
+  "cursoId": 2,
+  "disciplinaId": 3
+}

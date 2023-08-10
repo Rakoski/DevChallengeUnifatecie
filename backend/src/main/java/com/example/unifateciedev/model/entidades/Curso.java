@@ -35,6 +35,11 @@ public class Curso {
 
     }
 
+    public void addCourseDiscipline(CursoDisciplina courseDiscipline) {
+        cursoDisciplina.add(courseDiscipline);
+        courseDiscipline.setCurso(this);
+    }
+
     public Long getIdCurso() {
         return idCurso;
     }
