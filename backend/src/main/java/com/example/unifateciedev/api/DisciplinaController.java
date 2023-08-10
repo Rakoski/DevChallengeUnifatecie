@@ -1,9 +1,11 @@
 package com.example.unifateciedev.api;
 
 import com.example.unifateciedev.model.Dtos.DisciplinaRegistroCursoDto;
+import com.example.unifateciedev.model.Dtos.DisciplinaRegistroUserDto;
 import com.example.unifateciedev.model.entidades.Curso;
 import com.example.unifateciedev.model.entidades.Disciplina;
 import com.example.unifateciedev.service.ServicoCurso;
+import com.example.unifateciedev.service.UserService;
 import com.example.unifateciedev.service.repo.CursoRepository;
 import com.example.unifateciedev.service.repo.DisciplinasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.Access;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -31,6 +32,9 @@ public class DisciplinaController {
     @Autowired
     private ServicoCurso servicoCurso;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/cursos/registrar")
     public ResponseEntity<String> colocarCursoComDisciplina(@RequestBody DisciplinaRegistroCursoDto disciplinaRegistroCursoDto) {
         try {
@@ -45,6 +49,24 @@ public class DisciplinaController {
                     .body("Error registering disciplina with curso: " + e.getMessage());
         }
     }
+
+    @PostMapping("/usuario/registrar")
+    public ResponseEntity<String> registrarUsuarioComDisciplina(@RequestBody DisciplinaRegistroUserDto disciplinaRegistroUserDto) {
+        try {
+            userService.registrarUsuarioComSuaDisciplina(
+                    disciplinaRegistroUserDto.getUserId(),
+                    disciplinaRegistroUserDto.getDisciplinaId(),
+                    disciplinaRegistroUserDto.getNota(),
+                    disciplinaRegistroUserDto.getStatusDisciplina()
+            );
+
+            return ResponseEntity.ok("User registered with disciplina successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error registering user with disciplina: " + e.getMessage());
+        }
+    }
+
 
     @GetMapping("/{id_disciplina}")
     public ResponseEntity<List<Curso>> encontreCursosPeloIdDaDisciplina(@PathVariable("id_disciplina") Long idDisciplina) {

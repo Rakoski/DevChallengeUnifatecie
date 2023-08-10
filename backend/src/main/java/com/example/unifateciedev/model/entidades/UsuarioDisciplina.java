@@ -25,6 +25,10 @@ public class UsuarioDisciplina {
     @Column(name = "status_disciplina")
     private String statusDisciplina;
 
+    public UsuarioDisciplina() {
+
+    }
+
     public Long getIdUsuarioDisciplina() {
         return idUsuarioDisciplina;
     }
