@@ -16,10 +16,10 @@ import java.util.UUID;
 
     List<User> findByEmail(String email);
 
-    @Query(value = "SELECT c.id_curso, c.nome AS curso_nome, c.duracao_periodo " +
-            "FROM cursos c " +
-            "JOIN cursos_usuario cu ON c.id_curso = cu.curso_id " +
-            "JOIN usuario u ON cu.usuario_id = u.id_usuario " +
+    @Query(value = "SELECT c.id_curso, c.curso_nome AS curso_nome, c.duracao_periodo_curso " +
+            "FROM usuarios.curso c " +
+            "JOIN usuarios.curso_usuario cu ON c.id_curso = cu.curso_id " +
+            "JOIN usuarios.usuario u ON cu.usuario_id = u.id_usuario " +
             "WHERE u.id_usuario = :id_usuario", nativeQuery = true)
     List<Object[]> findCursosByUserId(@Param("id_usuario") Long id_usuario);
 

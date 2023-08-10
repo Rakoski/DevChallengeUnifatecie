@@ -1,6 +1,5 @@
 package com.example.unifateciedev;
 
-import com.example.unifateciedev.api.utils.InterceptadorIdUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,13 +30,5 @@ public class WebConfig implements WebMvcConfigurer {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converters.add(converter);
-    }
-
-    @Autowired
-    private InterceptadorIdUsuario userIdExtractionInterceptor;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(userIdExtractionInterceptor);
     }
 }

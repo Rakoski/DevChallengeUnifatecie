@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.security.SecureRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PasswordUtils {
 
@@ -12,6 +14,15 @@ public class PasswordUtils {
         new SecureRandom().nextBytes(salt);
         return salt;
     }
+
+    public static boolean isValidEmail(String email) {
+        String pattern = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
+        Pattern regexPattern = Pattern.compile(pattern);
+        Matcher matcher = regexPattern.matcher(email);
+        return matcher.matches();
+    }
+
+    // Algorítmo JWT
 
     public static byte[] generateHash(String password, byte[] salt) {
         try {

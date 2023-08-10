@@ -1,37 +1,34 @@
 package com.example.unifateciedev.api;
 
-import com.example.unifateciedev.model.entidades.UserPost;
+import com.example.unifateciedev.api.utils.PasswordUtils;
+import com.example.unifateciedev.model.entidades.User;
+import com.example.unifateciedev.service.repo.CursoRepository;
+import com.example.unifateciedev.service.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import com.example.unifateciedev.model.entidades.User;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.sql.*;
-import java.util.Base64;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
 
+import static com.example.unifateciedev.api.utils.PasswordUtils.generateHash;
 
-
-// É importante a criação de uma database chamada "usuarios" no localhost com uma table chamada Users para funcionar
 @RestController
-@RequestMapping("/api/auth")
-public class AuthController {
+@RequestMapping("/api/aluno")
+public class UserController {
+
+    protected CursoRepository cursoRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private Environment environment;
-
-    // favor quem for usar para testes colocar sua password e não dar commit nela, já tive vários problemas de conexão
-    // e fiquei aqui meia hora q nem trouxa debugando por causa de outra password debugando
+    public UserController(UserRepository userRepository, CursoRepository cursoRepository) {
+        this.userRepository = userRepository;
+        this.cursoRepository = cursoRepository;
+    }
 
     private Connection getConnection() throws SQLException {
         String server = "localhost";
@@ -45,18 +42,19 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User request) {
         try {
-            if (!isValidEmail(request.getEmail())) {
+            if (!PasswordUtils.isValidEmail(request.getEmail())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
             }
 
-            byte[] passwordSalt = generateSalt();
+            byte[] passwordSalt = PasswordUtils.generateSalt();
             byte[] passwordHash = generateHash(request.getPassword(), passwordSalt);
 
             String passwordHashString = Base64.getEncoder().encodeToString(passwordHash);
             String passwordSaltString = Base64.getEncoder().encodeToString(passwordSalt);
 
             try (Connection connection = getConnection()) {
-                String query = "INSERT INTO usuario (email, nome, sobrenome, password_hash, password_salt) VALUES (?, ?, ?, ?, ?)";
+                String query = "INSERT INTO usuarios.usuario (usuario_email, usuario_nome, usuario_sobrenome, " +
+                        "password_hash, password_salt) VALUES (?, ?, ?, ?, ?)";
 
                 try (PreparedStatement statement = connection.prepareStatement(query)) {
                     statement.setString(1, request.getEmail());
@@ -76,10 +74,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserPost request) {
+    public ResponseEntity<String> loginUser(@RequestBody User request) {
         try {
             try (Connection connection = getConnection()) {
-                String query = "SELECT email, nome, sobrenome, password_hash, password_salt FROM usuario WHERE email = ?";
+                String query = "SELECT usuario_email, usuario_nome, usuario_sobrenome, password_hash, password_salt FROM" +
+                        " usuarios.usuario WHERE usuario_email = ?";
 
                 try (PreparedStatement statement = connection.prepareStatement(query)) {
                     statement.setString(1, request.getEmail());
@@ -107,28 +106,25 @@ public class AuthController {
         }
     }
 
-    private boolean isValidEmail(String email) {
-        String pattern = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$";
-        Pattern regexPattern = Pattern.compile(pattern);
-        Matcher matcher = regexPattern.matcher(email);
-        return matcher.matches();
+    @GetMapping("/estudantes")
+    public List<User> encontreTodosEstudantes() {
+        return userRepository.findAll();
+    }
+    @GetMapping("/usuario_info/{id_usuario}")
+    public ResponseEntity<Map<String, String>> encontreUserPorId(@PathVariable("id_usuario") Long id_usuario) {
+        User user = userRepository.findById(id_usuario)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado com id " + id_usuario));
+
+        Map<String, String> userInfo = new HashMap<>();
+        userInfo.put("nome", user.getNome());
+        userInfo.put("sobrenome", user.getSobrenome());
+        userInfo.put("email", user.getEmail());
+
+        return ResponseEntity.ok(userInfo);
     }
 
-    // Algorítmo JWT
-
-    private byte[] generateSalt() {
-        byte[] salt = new byte[16];
-        new SecureRandom().nextBytes(salt);
-        return salt;
-    }
-
-    private byte[] generateHash(String password, byte[] salt) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            return md.digest(password.getBytes());
-        } catch (NoSuchAlgorithmException ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error generating hash", ex);
-        }
+    @GetMapping("/encontre/{email}")
+    public List<User> encontreUserPorEmail(@PathVariable String email) {
+        return userRepository.findByEmail(email);
     }
 }

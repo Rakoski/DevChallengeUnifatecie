@@ -1,10 +1,6 @@
 package com.example.unifateciedev.model.entidades;
 
 
-import com.example.unifateciedev.model.entidades.Curso;
-import com.fasterxml.jackson.annotation.*;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,19 +10,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
-    private Long id_usuario;
+    private Long idUsuario;
 
-    @Column(name = "email")
+    @Column(name = "usuario_email")
     private String email;
 
-    @Column(name = "nome")
+    @Column(name = "usuario_nome")
     private String nome;
 
-    @Column(name = "sobrenome")
+    @Column(name = "usuario_sobrenome")
     private String sobrenome;
 
     @Transient
-    String password;
+    private String password;
 
     @Column(name = "password_hash")
     private byte[] passwordHash;
@@ -34,53 +30,24 @@ public class User {
     @Column(name = "password_salt")
     private byte[] passwordSalt;
 
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = CursoUsuario.class)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
+    private Set<CursoUsuario> cursoUsuario;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "cursos_usuario",
-    joinColumns = {
-            @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
-    },
-            inverseJoinColumns = {
-            @JoinColumn(name = "curso_id", referencedColumnName = "id_curso")
-            }
-    )
-    @JsonBackReference
-    private Set<Curso> cursos;
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = UsuarioDisciplina.class)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
+    private Set<UsuarioDisciplina> usuarioDisciplina;
 
-    @ManyToMany
-    @JsonBackReference
-    private Set<Disciplina> disciplinas;
+    public User() {
 
-    public Set<Curso> getCursos() {
-        return cursos;
     }
 
-    public void setCursos(Set<Curso> cursos) {
-        this.cursos = cursos;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
-    }
-
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
-    }
-
-    public Set<Disciplina> getDisciplinas() {
-        return disciplinas;
-    }
-
-    public void setDisciplinas(Set<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
-    }
-
-    public Long getId_user() {
-        return id_usuario;
-    }
-
-    public void setId_user(Long id_user) {
-        this.id_usuario = id_user;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getEmail() {
@@ -103,14 +70,6 @@ public class User {
         return sobrenome;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setSobrenome(String sobrenome) {
         this.sobrenome = sobrenome;
     }
@@ -129,5 +88,29 @@ public class User {
 
     public void setPasswordSalt(byte[] passwordSalt) {
         this.passwordSalt = passwordSalt;
+    }
+
+    public Set<CursoUsuario> getCursoUsuario() {
+        return cursoUsuario;
+    }
+
+    public void setCursoUsuario(Set<CursoUsuario> cursoUsuario) {
+        this.cursoUsuario = cursoUsuario;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<UsuarioDisciplina> getUsuarioDisciplina() {
+        return usuarioDisciplina;
+    }
+
+    public void setUsuarioDisciplina(Set<UsuarioDisciplina> usuarioDisciplina) {
+        this.usuarioDisciplina = usuarioDisciplina;
     }
 }

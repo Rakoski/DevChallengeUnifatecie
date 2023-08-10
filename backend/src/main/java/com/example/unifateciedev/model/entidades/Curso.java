@@ -1,62 +1,43 @@
 package com.example.unifateciedev.model.entidades;
 
-import com.fasterxml.jackson.annotation.*;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "cursos")
+@Table(name = "curso")
 public class Curso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_curso")
     private Long idCurso;
 
-    @Column(name = "nome")
+    @Column(name = "curso_nome")
     private String nome;
 
-    @Column(name = "duracao_periodo")
+    @Column(name = "duracao_periodo_curso")
     private int duracao_periodo;
 
-    @ManyToMany(mappedBy = "cursos", fetch = FetchType.EAGER)
-    @JsonBackReference
-    private Set<User> usuarios;
+    @OneToMany(targetEntity = CursoDisciplina.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "curso_id", referencedColumnName = "id_curso")
+    private Set<CursoDisciplina> cursoDisciplina;
 
-    @ManyToMany(mappedBy = "cursos", fetch = FetchType.EAGER)
-    @JsonManagedReference
-    private Set<Disciplina> disciplinas;
+    @OneToMany(targetEntity = CursoUsuario.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "curso_id", referencedColumnName = "id_curso")
+    private Set<CursoUsuario> cursoUsuarios;
 
-    public Set<Disciplina> getDisciplinas() {
-        return disciplinas;
-    }
-
-    public void setDisciplinas(Set<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
-    }
-
-    public Curso(Set<User> usuario) {
-        this.usuarios = usuario;
-    }
-
-    public void setUsuarios(Set<User> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public Set<User> getUsuarios() {
-        return usuarios;
+    public Curso(Long idCurso, String nome, int duracao_periodo) {
+        this.idCurso = idCurso;
+        this.nome = nome;
+        this.duracao_periodo = duracao_periodo;
     }
 
     public Curso() {
 
     }
 
-    public Curso(Long idCurso, int duracao_periodo, String nome) {
-        this.idCurso = idCurso;
-        this.duracao_periodo = duracao_periodo;
-        this.nome = nome;
+    public void addCourseDiscipline(CursoDisciplina courseDiscipline) {
+        cursoDisciplina.add(courseDiscipline);
+        courseDiscipline.setCurso(this);
     }
 
     public Long getIdCurso() {
@@ -67,14 +48,6 @@ public class Curso {
         this.idCurso = idCurso;
     }
 
-    public int getDuracao_periodo() {
-        return duracao_periodo;
-    }
-
-    public void setDuracao_periodo(int duracao_periodo) {
-        this.duracao_periodo = duracao_periodo;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -83,17 +56,28 @@ public class Curso {
         this.nome = nome;
     }
 
-    public Set<Disciplina> getDisciplina() {
-        return disciplinas;
+    public int getDuracao_periodo() {
+        return duracao_periodo;
     }
 
-    public void setDisciplinaPosts(Set<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
+    public void setDuracao_periodo(int duracao_periodo) {
+        this.duracao_periodo = duracao_periodo;
     }
 
-    public Set<Disciplina> getDisciplinaPosts() {
-        return disciplinas;
+    public Set<CursoDisciplina> getCursoDisciplina() {
+        return cursoDisciplina;
     }
 
+    public void setCursoDisciplina(Set<CursoDisciplina> cursoDisciplina) {
+        this.cursoDisciplina = cursoDisciplina;
+    }
+
+    public Set<CursoUsuario> getCursoUsuarios() {
+        return cursoUsuarios;
+    }
+
+    public void setCursoUsuarios(Set<CursoUsuario> cursoUsuarios) {
+        this.cursoUsuarios = cursoUsuarios;
+    }
 }
 

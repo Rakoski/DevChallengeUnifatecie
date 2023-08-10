@@ -1,7 +1,13 @@
 package com.example.unifateciedev.api;
 
-import com.example.unifateciedev.model.entidades.*;
-import com.example.unifateciedev.service.repo.*;
+import com.example.unifateciedev.model.Dtos.DisciplinaRegistroCursoDto;
+import com.example.unifateciedev.model.Dtos.DisciplinaRegistroUserDto;
+import com.example.unifateciedev.model.entidades.Curso;
+import com.example.unifateciedev.model.entidades.Disciplina;
+import com.example.unifateciedev.service.ServicoCurso;
+import com.example.unifateciedev.service.UserService;
+import com.example.unifateciedev.service.repo.CursoRepository;
+import com.example.unifateciedev.service.repo.DisciplinasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,156 +15,55 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigInteger;
-import java.sql.*;
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/disciplina")
 public class DisciplinaController {
 
-    private final UserRepository userRepository;
-    private final CursoRepository cursoRepository;
-    private final DisciplinasRepository disciplinasRepository;
+    // o que eu queria fazer é um sistema que consiga registrar disciplinas com diversos cursos e, assim que um usuário
+    // for registrado com tal curso ele é automáticamente registrado com todas as disciplinas desse curso. Após isso,
+    // queria fazer um método PUT para conseguir alterar a nota do usuário em tal disciplina
+
+    protected CursoRepository cursoRepository;
+
+    protected DisciplinasRepository disciplinasRepository;
 
     @Autowired
-    public DisciplinaController(UserRepository userRepository, CursoRepository cursoRepository, DisciplinasRepository disciplinasRepository, DisciplinasRepository disciplinasRepository1) {
-        this.userRepository = userRepository;
-        this.cursoRepository = cursoRepository;
-        this.disciplinasRepository = disciplinasRepository1;
-    }
+    private ServicoCurso servicoCurso;
 
-    private Connection getConnection() throws SQLException {
-        String server = "localhost";
-        String database = "usuarios";
-        String username = "root";
-        String password = "Mateus0312";
-        String url = "jdbc:mysql://" + server + "/" + database + "?user=" + username + "&password=" + password;
-        return DriverManager.getConnection(url);
-    }
+    @Autowired
+    private UserService userService;
 
-    @PostMapping("/register_curso")
-    public ResponseEntity<DisciplinaPost> salvarDisciplina(@RequestBody DisciplinaPost disciplinaPost) {
-        Random random = new Random();
-        int randomNumber2 = random.nextInt(5) + 1;
-        try (Connection connection = getConnection()) {
-            String insertDisciplinaQuery = "INSERT INTO disciplinas (nome_disciplina, professor) VALUES (?, ?)";
-            try (PreparedStatement disciplinaStatement = connection.prepareStatement(insertDisciplinaQuery, Statement.RETURN_GENERATED_KEYS)) {
-                disciplinaStatement.setString(1, disciplinaPost.getNome_disciplina());
-                disciplinaStatement.setString(2, disciplinaPost.getProfessor());
+    @PostMapping("/cursos/registrar")
+    public ResponseEntity<String> colocarCursoComDisciplina(@RequestBody DisciplinaRegistroCursoDto disciplinaRegistroCursoDto) {
+        try {
+            servicoCurso.registrarCursoComDisciplina(
+                    disciplinaRegistroCursoDto.getCursoId(),
+                    disciplinaRegistroCursoDto.getDisciplinaId()
+            );
 
-                disciplinaStatement.executeUpdate();
-
-                try (ResultSet generatedKeys = disciplinaStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        long idDisciplina = generatedKeys.getLong(1);
-                        disciplinaPost.setIdDisciplinas(idDisciplina);
-
-
-                        String insertCursosDisciplinasQuery = "INSERT INTO cursos_disciplinas (curso_id, disciplinas_id) VALUES (?, ?)";
-                        try (PreparedStatement cursosDisciplinasStatement = connection.prepareStatement(insertCursosDisciplinasQuery)) {
-                            for (CursoPost cursoPost : disciplinaPost.getCursos()) {
-                                cursosDisciplinasStatement.setLong(1, cursoPost.getIdCurso());
-                                cursosDisciplinasStatement.setLong(2, idDisciplina);
-                                cursosDisciplinasStatement.addBatch();
-                            }
-                            cursosDisciplinasStatement.executeBatch();
-                        }
-                        String insertUsuarioIntoDisciplina = "INSERT INTO usuario_disciplina (usuario_id, disciplina_id, nota, status_disciplina) VALUES (?, ?, ?, ?)";
-                        try (PreparedStatement insertUsuarioIntoDisciplinaStatement = connection.prepareStatement(insertUsuarioIntoDisciplina)) {
-                            for (UserPost userPost : disciplinaPost.getUserPosts()) {
-                                insertUsuarioIntoDisciplinaStatement.setLong(1, userPost.getId_user());
-                                insertUsuarioIntoDisciplinaStatement.setLong(2, idDisciplina);
-                                if (randomNumber2 == 1 || randomNumber2 == 2) {
-                                    int nota = random.nextInt(100) + 1;
-                                    if (nota < 60) {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "REPROVADO");
-                                    } else {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "APROVADO");
-                                    }
-                                    insertUsuarioIntoDisciplinaStatement.setInt(3, nota);
-                                } else {
-                                    if (randomNumber2 == 3) {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "A CURSAR");
-                                        insertUsuarioIntoDisciplinaStatement.setString(3, null);
-                                    } else if (randomNumber2 == 4) {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "DISPENSADO");
-                                        insertUsuarioIntoDisciplinaStatement.setString(3, null);
-                                    } else {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "CURSANDO");
-                                        insertUsuarioIntoDisciplinaStatement.setString(3, null);
-                                    }
-                                }
-                                insertUsuarioIntoDisciplinaStatement.addBatch();
-                                insertUsuarioIntoDisciplinaStatement.executeBatch();
-                            }
-                        }
-                    } else {
-                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no registro da disciplina");
-                    }
-                }
-
-                return new ResponseEntity<>(disciplinaPost, HttpStatus.CREATED);
-            }
-        } catch (SQLException e) {
-            throw new  ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no registro da disciplina", e);
+            return ResponseEntity.ok("Disciplina registered with curso successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error registering disciplina with curso: " + e.getMessage());
         }
     }
 
-    @PostMapping("/register_usuario")
-    public ResponseEntity<DisciplinaPost> salvarDisciplinaComUsuario(@RequestBody DisciplinaPost disciplinaPost) {
-        Random random = new Random();
-        int randomNumber2 = random.nextInt(5) + 1;
-        try (Connection connection = getConnection()) {
-            String insertDisciplinaQuery = "INSERT INTO disciplinas (nome_disciplina, professor) VALUES (?, ?)";
-            try (PreparedStatement disciplinaStatement = connection.prepareStatement(insertDisciplinaQuery, Statement.RETURN_GENERATED_KEYS)) {
-                disciplinaStatement.setString(1, disciplinaPost.getNome_disciplina());
-                disciplinaStatement.setString(2, disciplinaPost.getProfessor());
+    @PostMapping("/usuario/registrar")
+    public ResponseEntity<String> registrarUsuarioComDisciplina(@RequestBody DisciplinaRegistroUserDto disciplinaRegistroUserDto) {
+        try {
+            userService.registrarUsuarioComSuaDisciplina(
+                    disciplinaRegistroUserDto.getUserId(),
+                    disciplinaRegistroUserDto.getDisciplinaId(),
+                    disciplinaRegistroUserDto.getNota(),
+                    disciplinaRegistroUserDto.getStatusDisciplina()
+            );
 
-                disciplinaStatement.executeUpdate();
-
-                try (ResultSet generatedKeys = disciplinaStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        long idDisciplina = generatedKeys.getLong(1);
-                        disciplinaPost.setIdDisciplinas(idDisciplina);
-
-                        String insertUsuarioIntoDisciplina = "INSERT INTO usuario_disciplina (usuario_id, disciplina_id, nota, status_disciplina) VALUES (?, ?, ?, ?)";
-                        try (PreparedStatement insertUsuarioIntoDisciplinaStatement = connection.prepareStatement(insertUsuarioIntoDisciplina)) {
-                            for (UserPost userPost : disciplinaPost.getUserPosts()) {
-                                insertUsuarioIntoDisciplinaStatement.setLong(1, userPost.getId_user());
-                                insertUsuarioIntoDisciplinaStatement.setLong(2, idDisciplina);
-                                if (randomNumber2 == 1 || randomNumber2 == 2) {
-                                    int nota = random.nextInt(100) + 1;
-                                    if (nota < 60) {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "REPROVADO");
-                                    } else {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "APROVADO");
-                                    }
-                                    insertUsuarioIntoDisciplinaStatement.setInt(3, nota);
-                                } else {
-                                    if (randomNumber2 == 3) {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "A CURSAR");
-                                        insertUsuarioIntoDisciplinaStatement.setString(3, null);
-                                    } else if (randomNumber2 == 4) {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "DISPENSADO");
-                                        insertUsuarioIntoDisciplinaStatement.setString(3, null);
-                                    } else {
-                                        insertUsuarioIntoDisciplinaStatement.setString(4, "CURSANDO");
-                                        insertUsuarioIntoDisciplinaStatement.setString(3, null);
-                                    }
-                                }
-                                insertUsuarioIntoDisciplinaStatement.addBatch();
-                                insertUsuarioIntoDisciplinaStatement.executeBatch();
-                            }
-                        }
-                    } else {
-                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no registro da disciplina");
-                    }
-                }
-
-                return new ResponseEntity<>(disciplinaPost, HttpStatus.CREATED);
-            }
-        } catch (SQLException e) {
-            throw new  ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no registro da disciplina", e);
+            return ResponseEntity.ok("User registered with disciplina successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error registering user with disciplina: " + e.getMessage());
         }
     }
 
@@ -172,7 +77,7 @@ public class DisciplinaController {
             Long id_curso = ((BigInteger) row[0]).longValue();
             String nome = (String) row[1];
             Integer duracao_periodo = (Integer) row[2];
-            cursos.add(new Curso(id_curso, duracao_periodo, nome));
+            cursos.add(new Curso(id_curso, nome, duracao_periodo));
         }
 
         if (!cursos.isEmpty()) {

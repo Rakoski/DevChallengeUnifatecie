@@ -2,9 +2,6 @@ package com.example.unifateciedev.api;
 
 import com.example.unifateciedev.model.entidades.ProtocoloUser;
 import com.example.unifateciedev.service.repo.ProtocoloUsuarioRepository;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
