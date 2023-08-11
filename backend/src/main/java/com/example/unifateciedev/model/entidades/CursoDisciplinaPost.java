@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "curso_disciplina")
-public class CursoDisciplina {
+public class CursoDisciplinaPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,20 +15,18 @@ public class CursoDisciplina {
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
-    @JsonBackReference
-    private Curso curso;
+    private CursoPost curso;
 
     @ManyToOne
     @JoinColumn(name = "disciplina_id")
-    @JsonBackReference
-    private Disciplina disciplina;
+    private DisciplinaPost disciplina;
 
-    public CursoDisciplina(Curso curso, Disciplina disciplina) {
+    public CursoDisciplinaPost(CursoPost curso, DisciplinaPost disciplina) {
         this.curso = curso;
         this.disciplina = disciplina;
     }
 
-    public CursoDisciplina() {
+    public CursoDisciplinaPost() {
 
     }
 
@@ -40,19 +38,19 @@ public class CursoDisciplina {
         CursoDisciplinaId = cursoDisciplinaId;
     }
 
-    public Curso getCurso() {
+    public CursoPost getCurso() {
         return curso;
     }
 
-    public void setCurso(Curso curso) {
+    public void setCurso(CursoPost curso) {
         this.curso = curso;
     }
 
-    public Disciplina getDisciplina() {
+    public DisciplinaPost getDisciplina() {
         return disciplina;
     }
 
-    public void setDisciplina(Disciplina disciplina) {
+    public void setDisciplina(DisciplinaPost disciplina) {
         this.disciplina = disciplina;
     }
 

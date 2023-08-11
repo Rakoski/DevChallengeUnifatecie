@@ -1,12 +1,10 @@
 package com.example.unifateciedev.model.entidades;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "curso_usuario")
-public class CursoUsuario {
+public class CursoUsuarioPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,18 +13,16 @@ public class CursoUsuario {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonBackReference
-    private User user;
+    private UserPost user;
 
     @ManyToOne
     @JoinColumn(name = "curso_id")
-    @JsonBackReference
-    private Curso curso;
+    private CursoPost curso;
 
     @Column(name = "nome_status_curso_usuario")
     private String nomeStatusCursoUsuario;
 
-    public CursoUsuario() {
+    public CursoUsuarioPost() {
 
     }
 
@@ -38,19 +34,19 @@ public class CursoUsuario {
         this.idCursoUsuario = idCursoUsuario;
     }
 
-    public User getUser() {
+    public UserPost  getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserPost user) {
         this.user = user;
     }
 
-    public Curso getCurso() {
+    public CursoPost getCurso() {
         return curso;
     }
 
-    public void setCurso(Curso curso) {
+    public void setCurso(CursoPost curso) {
         this.curso = curso;
     }
 
@@ -62,7 +58,7 @@ public class CursoUsuario {
         this.nomeStatusCursoUsuario = nomeStatusCursoUsuario;
     }
 
-    public CursoUsuario(Long idCursoUsuario, User user, Curso curso, String nomeStatusCursoUsuario) {
+    public CursoUsuarioPost(Long idCursoUsuario, UserPost user, CursoPost curso, String nomeStatusCursoUsuario) {
         this.idCursoUsuario = idCursoUsuario;
         this.user = user;
         this.curso = curso;

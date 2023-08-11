@@ -2,6 +2,7 @@ package com.example.unifateciedev.api;
 
 import com.example.unifateciedev.api.utils.PasswordUtils;
 import com.example.unifateciedev.model.entidades.User;
+import com.example.unifateciedev.model.entidades.UserPost;
 import com.example.unifateciedev.service.repo.CursoRepository;
 import com.example.unifateciedev.service.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User request) {
+    public ResponseEntity<UserPost> registerUser(@RequestBody UserPost request) {
         try {
             if (!PasswordUtils.isValidEmail(request.getEmail())) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Email");
@@ -74,7 +75,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User request) {
+    public ResponseEntity<String> loginUser(@RequestBody UserPost request) {
         try {
             try (Connection connection = getConnection()) {
                 String query = "SELECT usuario_email, usuario_nome, usuario_sobrenome, password_hash, password_salt FROM" +

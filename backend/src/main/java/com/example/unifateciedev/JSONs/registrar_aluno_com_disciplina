@@ -1,0 +1,8 @@
+localhost:8080/api/disciplina/usuario/registrar
+
+{
+    "userId": 1,
+    "disciplinaId": 2,
+    "nota": 90,
+    "statusDisciplina": "REPROVADO"
+}

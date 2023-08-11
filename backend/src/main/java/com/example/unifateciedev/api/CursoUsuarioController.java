@@ -1,12 +1,8 @@
 package com.example.unifateciedev.api;
 
 import com.example.unifateciedev.model.Dtos.UserRegistrationDto;
-import com.example.unifateciedev.model.entidades.Curso;
-import com.example.unifateciedev.model.entidades.CursoUsuario;
-import com.example.unifateciedev.model.entidades.User;
-import com.example.unifateciedev.service.repo.CursoRepository;
-import com.example.unifateciedev.service.repo.CursoUsuarioRepository;
-import com.example.unifateciedev.service.repo.UserRepository;
+import com.example.unifateciedev.model.entidades.*;
+import com.example.unifateciedev.service.repo.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,19 +20,27 @@ public class CursoUsuarioController {
 
     protected CursoRepository cursoRepository;
 
+    protected CursoPostRepository cursoPostRepository;
+
     protected CursoUsuarioRepository cursoUsuarioRepository;
+
+    protected CursoUsuarioPostRepository cursoUsuarioPostRepository;
 
     private final UserRepository userRepository;
 
-    public CursoUsuarioController(UserRepository userRepository) {
+    public CursoUsuarioController(CursoRepository cursoRepository, CursoPostRepository cursoPostRepository, CursoUsuarioRepository cursoUsuarioRepository, CursoUsuarioPostRepository cursoUsuarioPostRepository, UserRepository userRepository) {
+        this.cursoRepository = cursoRepository;
+        this.cursoPostRepository = cursoPostRepository;
+        this.cursoUsuarioRepository = cursoUsuarioRepository;
+        this.cursoUsuarioPostRepository = cursoUsuarioPostRepository;
         this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUserWithCourse(
+    public ResponseEntity<String> registrarUserComCurso(
             @RequestBody UserRegistrationDto userRegistrationDTO) {
         try {
-            User newUser = new User();
+            UserPost newUser = new UserPost();
             newUser.setIdUsuario(userRegistrationDTO.getIdUsuario());
             newUser.setEmail(userRegistrationDTO.getEmail());
             newUser.setNome(userRegistrationDTO.getNome());
@@ -45,17 +49,17 @@ public class CursoUsuarioController {
 
             // Pegando um curso pelo seu id_curso
             Long courseId = userRegistrationDTO.getCourseId();
-            Curso course = cursoRepository.findById(courseId)
+            CursoPost course = cursoPostRepository.findById(courseId)
                     .orElseThrow(() -> new IllegalArgumentException("Course not found"));
 
             // Criando um nova instancia de CursoUsuario com suas associações
-            CursoUsuario cursoUsuario = new CursoUsuario();
+            CursoUsuarioPost cursoUsuario = new CursoUsuarioPost();
             cursoUsuario.setUser(newUser);
             cursoUsuario.setCurso(course);
             cursoUsuario.setNomeStatusCursoUsuario(userRegistrationDTO.getNomeStatusCursoUsuario());
 
             // Salvando a entidade no repositório a partir do constructor
-            cursoUsuarioRepository.save(cursoUsuario);
+            cursoUsuarioPostRepository.save(cursoUsuario);
 
             return ResponseEntity.ok("User registered successfully.");
         } catch (Exception e) {
@@ -64,7 +68,7 @@ public class CursoUsuarioController {
         }
     }
 
-    @GetMapping("/cursos_usuario/{id_usuario}")
+    @GetMapping("/{id_usuario}")
     public ResponseEntity<List<Curso>> encontreUser(@PathVariable("id_usuario") Long id_usuario) {
         // dessa forma, o próprio servidor (nossas máquinas) vão pegar o email, ir na database e ver qual id corresponde
         // com o email e arquivar o id na sessão. Assim, quando o usuário acessar o endpoint o sprinboot vai dar um fetch
@@ -87,6 +91,7 @@ public class CursoUsuarioController {
         }
     }
 
+    // informações da duração do curso e o nome de seu curso pelo id dele
     @GetMapping("/curso_info/{id_curso}")
     public ResponseEntity<Map<String, Object>> getCursoInfo(@PathVariable("id_curso") Long id_curso) {
         Curso curso = cursoRepository.findById(id_curso)
