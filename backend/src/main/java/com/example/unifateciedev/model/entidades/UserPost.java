@@ -1,7 +1,6 @@
 package com.example.unifateciedev.model.entidades;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -9,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "usuario")
-public class User {
+public class UserPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
@@ -35,15 +34,13 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = CursoUsuario.class)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
-    @JsonManagedReference
-    private Set<CursoUsuario> cursoUsuario;
+    private Set<CursoUsuarioPost> cursoUsuario;
 
     @OneToMany(cascade = CascadeType.ALL, targetEntity = UsuarioDisciplina.class)
     @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
-    @JsonManagedReference
-    private Set<UsuarioDisciplina> usuarioDisciplina;
+    private Set<UsuarioDisciplinaPost> usuarioDisciplina;
 
-    public User() {
+    public UserPost() {
 
     }
 
@@ -95,11 +92,11 @@ public class User {
         this.passwordSalt = passwordSalt;
     }
 
-    public Set<CursoUsuario> getCursoUsuario() {
+    public Set<CursoUsuarioPost> getCursoUsuario() {
         return cursoUsuario;
     }
 
-    public void setCursoUsuario(Set<CursoUsuario> cursoUsuario) {
+    public void setCursoUsuario(Set<CursoUsuarioPost> cursoUsuario) {
         this.cursoUsuario = cursoUsuario;
     }
 
@@ -111,11 +108,11 @@ public class User {
         this.password = password;
     }
 
-    public Set<UsuarioDisciplina> getUsuarioDisciplina() {
+    public Set<UsuarioDisciplinaPost> getUsuarioDisciplina() {
         return usuarioDisciplina;
     }
 
-    public void setUsuarioDisciplina(Set<UsuarioDisciplina> usuarioDisciplina) {
+    public void setUsuarioDisciplinaPost(Set<UsuarioDisciplinaPost> usuarioDisciplina) {
         this.usuarioDisciplina = usuarioDisciplina;
     }
 }

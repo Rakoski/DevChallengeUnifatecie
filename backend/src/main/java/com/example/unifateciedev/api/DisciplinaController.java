@@ -35,6 +35,13 @@ public class DisciplinaController {
     @Autowired
     private UserService userService;
 
+    public DisciplinaController(CursoRepository cursoRepository, DisciplinasRepository disciplinasRepository, ServicoCurso servicoCurso, UserService userService) {
+        this.cursoRepository = cursoRepository;
+        this.disciplinasRepository = disciplinasRepository;
+        this.servicoCurso = servicoCurso;
+        this.userService = userService;
+    }
+
     @PostMapping("/cursos/registrar")
     public ResponseEntity<String> colocarCursoComDisciplina(@RequestBody DisciplinaRegistroCursoDto disciplinaRegistroCursoDto) {
         try {

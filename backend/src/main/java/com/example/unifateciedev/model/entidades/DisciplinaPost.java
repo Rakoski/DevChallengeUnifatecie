@@ -1,6 +1,5 @@
 package com.example.unifateciedev.model.entidades;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -8,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "disciplina")
-public class Disciplina {
+public class DisciplinaPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_disciplina")
@@ -22,37 +21,35 @@ public class Disciplina {
 
     @OneToMany(targetEntity = CursoDisciplina.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "disciplina_id", referencedColumnName = "id_disciplina")
-    @JsonManagedReference
-    private Set<CursoDisciplina> CursoDisciplina;
+    private Set<CursoDisciplinaPost> CursoDisciplina;
 
     @OneToMany(targetEntity = UsuarioDisciplina.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "disciplina_id", referencedColumnName = "id_disciplina")
-    @JsonManagedReference
-    private Set<UsuarioDisciplina> usuarioDisciplina;
+    private Set<UsuarioDisciplinaPost> usuarioDisciplina;
 
-    public Disciplina() {
+    public DisciplinaPost() {
 
     }
 
-    public Disciplina(Long idDisciplinas, String nomeDisciplina, String professor) {
+    public DisciplinaPost(Long idDisciplinas, String nomeDisciplina, String professor) {
         this.idDisciplinas = idDisciplinas;
         this.nomeDisciplina = nomeDisciplina;
         this.professor = professor;
     }
 
-    public Set<UsuarioDisciplina> getUsuarioDisciplina() {
+    public Set<UsuarioDisciplinaPost> getUsuarioDisciplina() {
         return usuarioDisciplina;
     }
 
-    public void setUsuarioDisciplina(Set<UsuarioDisciplina> usuarioDisciplina) {
+    public void setUsuarioDisciplina(Set<UsuarioDisciplinaPost> usuarioDisciplina) {
         this.usuarioDisciplina = usuarioDisciplina;
     }
 
-    public Set<com.example.unifateciedev.model.entidades.CursoDisciplina> getCursoDisciplina() {
+    public Set<CursoDisciplinaPost> getCursoDisciplina() {
         return CursoDisciplina;
     }
 
-    public void setCursoDisciplina(Set<com.example.unifateciedev.model.entidades.CursoDisciplina> cursoDisciplina) {
+    public void setCursoDisciplina(Set<CursoDisciplinaPost> cursoDisciplina) {
         CursoDisciplina = cursoDisciplina;
     }
 

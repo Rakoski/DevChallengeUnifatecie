@@ -1,13 +1,12 @@
 package com.example.unifateciedev.model.entidades;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "usuario_disciplina")
-public class UsuarioDisciplina {
+public class UsuarioDisciplinaPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +15,11 @@ public class UsuarioDisciplina {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonBackReference
-    private User usuario;
+    private UserPost usuario;
 
     @ManyToOne
     @JoinColumn(name = "disciplina_id")
-    @JsonBackReference
-    private Disciplina disciplina;
+    private DisciplinaPost disciplina;
 
     @Column(name = "nota")
     private int nota;
@@ -30,7 +27,7 @@ public class UsuarioDisciplina {
     @Column(name = "status_disciplina")
     private String statusDisciplina;
 
-    public UsuarioDisciplina() {
+    public UsuarioDisciplinaPost() {
 
     }
 
@@ -42,19 +39,19 @@ public class UsuarioDisciplina {
         this.idUsuarioDisciplina = idUsuarioDisciplina;
     }
 
-    public User getUsuario() {
+    public UserPost getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(User usuario) {
+    public void setUsuario(UserPost usuario) {
         this.usuario = usuario;
     }
 
-    public Disciplina getDisciplina() {
+    public DisciplinaPost getDisciplina() {
         return disciplina;
     }
 
-    public void setDisciplina(Disciplina disciplina) {
+    public void setDisciplina(DisciplinaPost disciplina) {
         this.disciplina = disciplina;
     }
 

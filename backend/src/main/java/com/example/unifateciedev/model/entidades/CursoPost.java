@@ -1,13 +1,11 @@
 package com.example.unifateciedev.model.entidades;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "curso")
-public class Curso {
+public class CursoPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_curso")
@@ -21,25 +19,23 @@ public class Curso {
 
     @OneToMany(targetEntity = CursoDisciplina.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "curso_id", referencedColumnName = "id_curso")
-    @JsonManagedReference
-    private Set<CursoDisciplina> cursoDisciplina;
+    private Set<CursoDisciplinaPost> cursoDisciplina;
 
     @OneToMany(targetEntity = CursoUsuario.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "curso_id", referencedColumnName = "id_curso")
-    @JsonManagedReference
-    private Set<CursoUsuario> cursoUsuarios;
+    private Set<CursoUsuarioPost> cursoUsuarios;
 
-    public Curso(Long idCurso, String nome, int duracao_periodo) {
+    public CursoPost(Long idCurso, String nome, int duracao_periodo) {
         this.idCurso = idCurso;
         this.nome = nome;
         this.duracao_periodo = duracao_periodo;
     }
 
-    public Curso() {
+    public CursoPost() {
 
     }
 
-    public void addCourseDiscipline(CursoDisciplina courseDiscipline) {
+    public void addCourseDiscipline(CursoDisciplinaPost courseDiscipline) {
         cursoDisciplina.add(courseDiscipline);
         courseDiscipline.setCurso(this);
     }
@@ -68,19 +64,19 @@ public class Curso {
         this.duracao_periodo = duracao_periodo;
     }
 
-    public Set<CursoDisciplina> getCursoDisciplina() {
+    public Set<CursoDisciplinaPost> getCursoDisciplina() {
         return cursoDisciplina;
     }
 
-    public void setCursoDisciplina(Set<CursoDisciplina> cursoDisciplina) {
+    public void setCursoDisciplina(Set<CursoDisciplinaPost> cursoDisciplina) {
         this.cursoDisciplina = cursoDisciplina;
     }
 
-    public Set<CursoUsuario> getCursoUsuarios() {
+    public Set<CursoUsuarioPost> getCursoUsuarios() {
         return cursoUsuarios;
     }
 
-    public void setCursoUsuarios(Set<CursoUsuario> cursoUsuarios) {
+    public void setCursoUsuarios(Set<CursoUsuarioPost> cursoUsuarios) {
         this.cursoUsuarios = cursoUsuarios;
     }
 }
