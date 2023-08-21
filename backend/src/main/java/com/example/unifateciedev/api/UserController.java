@@ -32,9 +32,9 @@ public class UserController {
     }
 
     private Connection getConnection() throws SQLException {
-        String server = "localhost";
-        String database = "usuarios";
-        String username = "root";
+        String server = "154.49.247.204";
+        String database = "u223541769_usuarios";
+        String username = "u223541769_Mateus";
         String password = "Mateus0312";
         String url = "jdbc:mysql://" + server + "/" + database + "?user=" + username + "&password=" + password;
         return DriverManager.getConnection(url);
@@ -54,7 +54,7 @@ public class UserController {
             String passwordSaltString = Base64.getEncoder().encodeToString(passwordSalt);
 
             try (Connection connection = getConnection()) {
-                String query = "INSERT INTO usuarios.usuario (usuario_email, usuario_nome, usuario_sobrenome, " +
+                String query = "INSERT INTO u223541769_usuarios.usuario (usuario_email, usuario_nome, usuario_sobrenome, " +
                         "password_hash, password_salt) VALUES (?, ?, ?, ?, ?)";
 
                 try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -79,7 +79,7 @@ public class UserController {
         try {
             try (Connection connection = getConnection()) {
                 String query = "SELECT usuario_email, usuario_nome, usuario_sobrenome, password_hash, password_salt FROM" +
-                        " usuarios.usuario WHERE usuario_email = ?";
+                        " u223541769_usuarios.usuario WHERE usuario_email = ?";
 
                 try (PreparedStatement statement = connection.prepareStatement(query)) {
                     statement.setString(1, request.getEmail());

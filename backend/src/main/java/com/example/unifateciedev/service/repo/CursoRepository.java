@@ -14,20 +14,20 @@ import java.util.List;
     List<Curso> findByNome(String nome);
 
     @Query(value = "SELECT c.id_curso, c.curso_nome AS curso_nome, c.duracao_periodo_curso " +
-            "FROM usuarios.curso c " +
-            "JOIN usuarios.curso_disciplina cd ON c.id_curso = cd.curso_id " +
-            "JOIN usuarios.disciplina d ON cd.disciplina_id = d.id_disciplina " +
+            "FROM u223541769_usuarios.curso c " +
+            "JOIN u223541769_usuarios.curso_disciplina cd ON c.id_curso = cd.curso_id " +
+            "JOIN u223541769_usuarios.disciplina d ON cd.disciplina_id = d.id_disciplina " +
             "WHERE d.id_disciplina = :id_disciplina", nativeQuery = true)
     List<Object[]> findCursosByDisciplinaId(@Param("id_disciplina") Long idDisciplina);
 
     @Query(value = "SELECT d.id_disciplina, d.nome_disciplina, d.professor_disciplina " +
-            "FROM usuarios.disciplina d " +
-            "JOIN usuarios.curso_disciplina cd ON d.id_disciplina = cd.disciplina_id " +
-            "JOIN usuarios.curso c ON cd.curso_id = c.id_curso " +
+            "FROM u223541769_usuarios.disciplina d " +
+            "JOIN u223541769_usuarios.curso_disciplina cd ON d.id_disciplina = cd.disciplina_id " +
+            "JOIN u223541769_usuarios.curso c ON cd.curso_id = c.id_curso " +
             "WHERE c.id_curso = :id_curso", nativeQuery = true)
     List<Object[]> findDisciplinasByCursoId(@Param("id_curso") Long idCurso);
 
-    @Query(value = "SELECT nome_status_curso_usuario, curso_id, usuario_id FROM usuarios.curso_usuario WHERE usuario_id = :id_usuario"
+    @Query(value = "SELECT nome_status_curso_usuario, curso_id, usuario_id FROM u223541769_usuarios.curso_usuario WHERE usuario_id = :id_usuario"
     , nativeQuery = true)
     List<Object[]> findCursoInfoByUserId(@Param("id_usuario") Long id_usuario);
 

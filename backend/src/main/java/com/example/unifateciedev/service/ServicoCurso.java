@@ -25,10 +25,10 @@ public class ServicoCurso {
 
     public void registrarCursoComDisciplina(Long courseId, Long disciplineId) {
         Curso course = cursoRepository.findById(courseId)
-                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Curso não encontrado"));
 
         Disciplina discipline = disciplinaRepository.findById(disciplineId)
-                .orElseThrow(() -> new EntityNotFoundException("Discipline not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Disciplina não encontrada"));
 
         CursoDisciplina courseDiscipline = new CursoDisciplina(course, discipline);
         course.addCourseDiscipline(courseDiscipline);
