@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
-@CrossOrigin(origins = "http://localhost:3000/login")
+@CrossOrigin(origins = "https://18.231.27.198:3000/login")
 public class UnifatecieDevApplication {
 
     public static void main(String[] args) {

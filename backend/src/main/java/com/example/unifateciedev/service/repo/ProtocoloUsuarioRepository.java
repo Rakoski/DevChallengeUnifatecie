@@ -13,7 +13,7 @@ public interface ProtocoloUsuarioRepository extends JpaRepository<ProtocoloUser,
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO usuarios.protocolo_usuario(usuario_id, curso_id, protocolo_typeid, protocolo_etapa, protocolo_setor, protocolo_status, protocolo_campo1, protocolo_docpath) " +
+    @Query(value = "INSERT INTO u223541769_usuarios.protocolo_usuario(usuario_id, curso_id, protocolo_typeid, protocolo_etapa, protocolo_setor, protocolo_status, protocolo_campo1, protocolo_docpath) " +
             "VALUES (?1, ?2, ?3, 0, 'ALUNO', 'EM PROCESSO', ?4, ?5)", nativeQuery = true)
     Integer colocarNoUsuarioProtocolo(int usuarioId, int cursoId, int protocoloTypeId, String protocoloCampo1, String protocoloDocPath);
 }

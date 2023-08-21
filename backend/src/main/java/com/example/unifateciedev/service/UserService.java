@@ -54,10 +54,10 @@ public class UserService {
     @Transactional
     public void registrarUsuarioComSuaDisciplina(Long userId, Long disciplinaId, int nota, String statusDisciplina) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
         Disciplina disciplina = disciplinaRepository.findById(disciplinaId)
-                .orElseThrow(() -> new EntityNotFoundException("Disciplina not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Disciplina não encontrada"));
 
         UsuarioDisciplina usuarioDisciplina = new UsuarioDisciplina();
         usuarioDisciplina.setUsuario(user);
