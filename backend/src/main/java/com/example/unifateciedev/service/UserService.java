@@ -29,29 +29,6 @@ public class UserService {
     private UserDisciplinaRepository usuarioDisciplinaRepository;
 
     @Transactional
-    public void registerUserWithCourse(User user, Long courseId, String nomeStatusCursoUsuario) {
-        Curso curso = cursoRepository.findById(courseId).orElseThrow(NoSuchElementException::new);
-
-        // colocando email, nome, sobrenome, password, etc. baseado no DTO
-
-        CursoUsuario cursoUsuario = new CursoUsuario();
-        // colocando os atributos
-        cursoUsuario.setUser(user);
-        cursoUsuario.setCurso(curso);
-        cursoUsuario.setNomeStatusCursoUsuario(nomeStatusCursoUsuario);
-        cursoUsuarioRepository.save(cursoUsuario);
-
-        for (CursoDisciplina cursoDisciplina : curso.getCursoDisciplina()) {
-            UsuarioDisciplina usuarioDisciplina = new UsuarioDisciplina();
-            usuarioDisciplina.setUsuario(user);
-            usuarioDisciplina.setDisciplina(cursoDisciplina.getDisciplina());
-            usuarioDisciplinaRepository.save(usuarioDisciplina);
-        }
-
-        userRepository.save(user);
-    }
-
-    @Transactional
     public void registrarUsuarioComSuaDisciplina(Long userId, Long disciplinaId, int nota, String statusDisciplina) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
